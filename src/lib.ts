@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 type Method = "GET" | "POST";
 
 const baseUrl = "https://api.bexio.com";
