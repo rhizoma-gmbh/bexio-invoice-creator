@@ -30,14 +30,12 @@ export async function readCsvReport(path: string): Promise<CsvLine[]> {
 
   output.sort((a, b) => a.startDate.localeCompare(b.startDate));
   const tempArray: CsvLine[] = [];
-  for (const [i, match] of output.entries()) {
+  for (const match of output) {
     if (match.seen) {
       continue;
     }
-    for (const [y, line] of output.entries()) {
-      if (i === y) {
-        continue;
-      }
+    match.seen = true;
+    for (const line of output) {
       if (match.description === line.description) {
         if (match.seen) {
           continue;
@@ -49,7 +47,6 @@ export async function readCsvReport(path: string): Promise<CsvLine[]> {
         line.seen = true;
       }
     }
-    match.seen = true;
     tempArray.push(match);
   }
 
