@@ -37,7 +37,7 @@ export async function readCsvReport(path: string): Promise<CsvLine[]> {
     match.seen = true;
     for (const line of output) {
       if (match.description === line.description) {
-        if (match.seen) {
+        if (line.seen) {
           continue;
         }
         if (match.startDate !== line.startDate) {
