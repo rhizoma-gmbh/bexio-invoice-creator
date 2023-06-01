@@ -1,10 +1,8 @@
-type Method = "GET" | "POST";
-
 const baseUrl = "https://api.bexio.com";
 
 export async function request<T>(
   pathname: string,
-  method: Method = "GET",
+  method: string,
   body?: T
 ): Promise<Response> {
   return await fetch(`${baseUrl}${pathname}`, {

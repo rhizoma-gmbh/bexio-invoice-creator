@@ -1,10 +1,9 @@
-# Timely to Bexio
+# Klog to Bexio
 
 ## Abstract
 
 This tool currently does:
 
-- parsing a CSV exported from Timely
 - format and sum equal equal descriptions to date ranges
 - write invoice positions according to Radicles invoice requirements
 - and then send it to the bexio API for the creation of a new invoice.
