@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "start": "bun run index.ts"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.0",
+    "fluent-iterable": "^0.1.6",
+    "zod": "^3.22.3"
+  },
+  "name": "bexio-invoice-creator",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

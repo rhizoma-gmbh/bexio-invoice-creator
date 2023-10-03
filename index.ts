@@ -1,40 +1,40 @@
-import "https://deno.land/x/dotenv@v3.2.0/load.ts";
+import fluent, { FluentIterable } from "fluent-iterable";
+import * as schema from "./lib/schema";
+import { Invoice } from "./lib/invoice";
+import { Output, formatText } from "./lib/klog";
+import { request } from "./lib/request";
 
-import * as schema from "./lib/schema.ts";
-import { Invoice } from "./lib/invoice.ts";
-import { Output, formatText } from "./lib/klog.ts";
-import { request } from "./lib/request.ts";
+const groups = new Map<string, number>();
 
-const decoder = new TextDecoder();
-const groups: Record<string, number> = {};
-
-for await (const chunk of Deno.stdin.readable) {
-  const obj: Output = JSON.parse(decoder.decode(chunk));
-
-  obj.records.forEach((record) => {
-    record.entries.forEach((entry) => {
-      const key = `${record.date}: ${entry.summary.trim()}`;
-      if (key in groups) {
-        groups[key] = entry.total_mins + groups[key];
-      } else {
-        groups[key] = entry.total_mins;
-      }
+for await (const line of console) {
+  if (line) {
+    const obj: Output = JSON.parse(line);
+    obj.records.forEach((record) => {
+      record.entries.forEach((entry) => {
+        const key = `${record.date}: ${entry.summary.trim()}`;
+        const value = groups.get(key);
+        if (value) {
+          groups.set(key, entry.total_mins + value);
+        } else {
+          groups.set(key, entry.total_mins);
+        }
+      });
     });
-  });
+  }
 }
 
-const positions = Object.entries(groups).map<schema.PositionCreate>(
-  ([text, amount]) => ({
-    amount: (amount / 60).toFixed(2),
-    unit_id: 2,
-    account_id: 150,
-    tax_id: 16,
-    text: formatText(text),
-    unit_price: "75",
-    discount_in_percent: "0",
-    type: "KbPositionCustom",
-  })
-);
+const positions: FluentIterable<schema.PositionCreate> = fluent(
+  groups.entries()
+).map(([text, amount]) => ({
+  amount: (amount / 60).toFixed(2),
+  unit_id: 2,
+  account_id: 150,
+  tax_id: 28,
+  text: formatText(text),
+  unit_price: "75",
+  discount_in_percent: "0",
+  type: "KbPositionCustom",
+}));
 
 const invoice = Invoice.create({
   title: "",
@@ -49,7 +49,7 @@ const invoice = Invoice.create({
   header: "",
   footer: "",
   mwst_type: 0,
-  mwst_is_net: false,
+  mwst_is_net: true,
   show_position_taxes: false,
   is_valid_from: "",
   is_valid_to: "",

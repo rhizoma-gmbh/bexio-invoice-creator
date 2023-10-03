@@ -1,12 +1,11 @@
-import "https://deno.land/x/dotenv@v3.2.0/load.ts";
-import { request } from "../lib/request.ts";
+import { request } from "../lib/request";
 
 const response = await request("/2.0/kb_invoice", "GET");
 const invoices = await response.json();
 
 const invoicesToEdit = invoices
-  .filter((i) => new Date(i.is_valid_from) > new Date("2023-01-01"))
-  .map((i) => i.id);
+  .filter((i: any) => new Date(i.is_valid_from) > new Date("2023-01-01"))
+  .map((i: any) => i.id);
 
 for (const invoiceId of invoicesToEdit) {
   const response = await request(
@@ -31,7 +30,7 @@ for (const invoiceId of invoicesToEdit) {
           discount_in_percent: position.discount_in_percent,
         }
       );
-    } catch (e) {
+    } catch (e: any) {
       console.warn(
         `Not able to update position ${position.id} in invoice ${invoiceId} (${e.message}))`
       );

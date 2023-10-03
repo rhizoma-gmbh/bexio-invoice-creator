@@ -1,4 +1,5 @@
-import type * as schema from "./schema.ts";
+import { FluentIterable } from "fluent-iterable";
+import type * as schema from "./schema";
 
 export class Invoice {
   #invoice: schema.InvoiceCreate;
@@ -11,7 +12,7 @@ export class Invoice {
     return new Invoice(invoice);
   }
 
-  public addPositions(position: schema.PositionCreate[]) {
+  public addPositions(position: FluentIterable<schema.PositionCreate>) {
     this.#invoice.positions.push(...position);
     return this;
   }
